@@ -1,0 +1,11 @@
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Debug\QuestionTools.exe.config
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Debug\QuestionTools.exe
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Debug\QuestionTools.pdb
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.csprojAssemblyReference.cache
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.Main.resources
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.Properties.Resources.resources
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.csproj.GenerateResource.cache
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.exe
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.pdb
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.csproj.ResolveComReference.cache
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Debug\QuestionTools.Help.resources
