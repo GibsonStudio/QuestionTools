@@ -80,6 +80,45 @@ namespace QuestionTools.classes
 
 
 
+        public static Question GetQuestionHotspot(XmlNode myNode)
+        {
+
+            Question q = new Question();
+
+            q.name = JwXML.GetNodeValue(myNode, "name/text");
+            q.text = JwXML.GetNodeValue(myNode, "questiontext/text");
+            q.type = JwXML.GetNodeAttribute(myNode, "type");
+
+            // get data
+            string data = "{";
+
+            // compile data from XML nodes
+            data += "areashape:" + JwXML.GetNodeValue(myNode, "areashape") + ",";
+            data += "rectangleleft:" + JwXML.GetNodeValue(myNode, "rectangleleft") + ",";
+            data += "rectangletop:" + JwXML.GetNodeValue(myNode, "rectangletop") + ",";
+            data += "rectangleright:" + JwXML.GetNodeValue(myNode, "rectangleright") + ",";
+            data += "rectanglebottom:" + JwXML.GetNodeValue(myNode, "rectanglebottom") + ",";
+            data += "imagewidth:" + JwXML.GetNodeValue(myNode, "imagewidth") + ",";
+            data += "imageheight:" + JwXML.GetNodeValue(myNode, "imageheight") + ",";
+            data += "areacorrect:" + JwXML.GetNodeValue(myNode, "areacorrect");
+            data += "}";
+            q.data = data;
+
+            // image?
+            XmlNode imageNode = JwXML.GetSingleNode(myNode, "file");
+
+            q.image = JwXML.GetNodeAttribute(imageNode, "name");
+
+            if (imageNode != null)
+            {
+                q.imageData = imageNode.InnerText;
+            }
+
+            return q;
+
+        }
+
+
 
 
 
@@ -127,6 +166,30 @@ namespace QuestionTools.classes
 
 
 
+        public static Question GetQuestionDragDropText(XmlNode myNode)
+        {
+
+            Question q = new Question();
+
+            q.name = JwString.CleanQuestionName(JwXML.GetNodeValue(myNode, "name/text"));
+            q.type = JwXML.GetNodeAttribute(myNode, "type");
+
+            string qData = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
+            qData = qData.Replace("<![CDATA[", "");
+            qData = qData.Replace("]]>", "");
+
+            // get question text
+            string pattern = @"[[\d+]]";
+            string qText = Regex.Replace(qData, pattern, " ________ ");
+            q.text = qText.Trim();
+
+            q.xmlNode = myNode;
+
+            return q;
+
+        }
+
+
         public static Question GetQuestionCloze(XmlNode myNode)
         {
 
@@ -147,6 +210,11 @@ namespace QuestionTools.classes
 
             // get answer options
             MatchCollection blanks = Regex.Matches(qData, pattern);
+
+            if (blanks.Count > 1) {
+                q.type = "UNSUPPORTED: " + q.type;
+                q.xmlNode = myNode;
+            }
 
             for (int i = 0; i < blanks.Count; i++)
             {
@@ -176,13 +244,7 @@ namespace QuestionTools.classes
                     q.AddOption(optionText, optionFeedback, optionGrade);
                 }
 
-
-
-
             }
-
-
-
 
             return q;
 
@@ -243,7 +305,8 @@ namespace QuestionTools.classes
 
             q.name = JwString.CleanQuestionName(JwXML.GetNodeValue(myNode, "name/text"));
             q.text = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
-            q.type = "UNKNOWN: " + JwXML.GetNodeAttribute(myNode, "type");
+            q.type = JwXML.GetNodeAttribute(myNode, "type");
+            q.xmlNode = myNode;
 
             XmlNodeList answers = JwXML.GetNodes(myNode, "answer");
 
@@ -301,6 +364,22 @@ namespace QuestionTools.classes
                 {
 
                     Question q = Moodle.GetQuestionCloze(questionNodes[i]);
+                    q.category = currentCategory;
+                    qList.Add(q);
+
+                }
+                else if (type == "ddwtos")
+                {
+
+                    Question q = Moodle.GetQuestionDragDropText(questionNodes[i]);
+                    q.category = currentCategory;
+                    qList.Add(q);
+
+                }
+                else if (type == "hotspot")
+                {
+
+                    Question q = Moodle.GetQuestionHotspot(questionNodes[i]);
                     q.category = currentCategory;
                     qList.Add(q);
 

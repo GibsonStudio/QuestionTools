@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace QuestionTools.classes
 {
@@ -19,9 +20,11 @@ namespace QuestionTools.classes
         public string category = "";
         public string text = "";
         public string type = "";
+        public string data = "";
         public string image = "";
         public string imageData = "";
         public List<Option> options = new List<Option>();
+        public XmlNode xmlNode;
 
 
         public void AddOption(string optionText, string optionFeedback, float optionGrade)
@@ -57,6 +60,8 @@ namespace QuestionTools.classes
 
             if (image != String.Empty) { txt += "Image: " + image + Environment.NewLine; }
             if (imageData != String.Empty) { txt += "ImageData: " + "YES" + Environment.NewLine; }
+            if (data != String.Empty) { txt += "Data: " + data + Environment.NewLine; }
+            if (xmlNode != null) { txt += "XML:" + Environment.NewLine + xmlNode.OuterXml.ToString() + Environment.NewLine; }
 
             return txt;
         }
@@ -91,6 +96,14 @@ namespace QuestionTools.classes
         public string text = "";
         public float grade = 0;
         public string feedback = "";
+    }
+
+
+
+    public class Image
+    {
+        public string name = "";
+        public string imageData = "";
     }
 
 

@@ -364,7 +364,7 @@
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Main";
-            this.Text = "Question Tools v1.01";
+            this.Text = "Question Tools v1.02";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.tabControl1.ResumeLayout(false);

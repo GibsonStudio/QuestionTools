@@ -14,6 +14,7 @@ using System.Windows.Forms;
 
 
 //TODO check code still works with other input formats
+//TODO account for multiple images in question text
 
 
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace QuestionTools.classes
 {
@@ -21,16 +22,28 @@ namespace QuestionTools.classes
             List<string> result = new List<string>();
 
             string filenameMResponse = Path.Combine(CFG.outputDir, Path.GetFileNameWithoutExtension(filename) + "-mresponse.csv");
+            string filenameHotspot = Path.Combine(CFG.outputDir, Path.GetFileNameWithoutExtension(filename) + "-hotspot.csv");
+            string filenameXML = Path.Combine(CFG.outputDir, Path.GetFileNameWithoutExtension(filename) + "-UNSUPPORTED.xml");
 
             // sort questions into output types
             List<Question> qDefault = new List<Question>();
             List<Question> qMResponse = new List<Question>();
+            List<Question> qHotspot = new List<Question>();
+            List<Question> qXML = new List<Question>();
 
             for (int i = 0; i < questions.Count; i++)
             {
 
                 Question q = questions[i];
-                if (q.HasMultipleCorrect())
+                if (q.type == "hotspot")
+                {
+                    qHotspot.Add(q);
+                }
+                else if (q.type == "gapselect" || q.type == "ddwtos" || q.type.StartsWith("UNSUPPORTED"))
+                {
+                    qXML.Add(q);
+                }
+                else if (q.HasMultipleCorrect())
                 {
                     qMResponse.Add(q);
                 }
@@ -43,9 +56,13 @@ namespace QuestionTools.classes
 
             result.Add(qDefault.Count.ToString() + " default qtypes found.");
             result.Add(qMResponse.Count.ToString() + " MResponse found.");
+            result.Add(qHotspot.Count.ToString() + " hotspot qtype found.");
+            result.Add(qXML.Count.ToString() + " unsupported qtype found - will output to xml file.");
 
             if (qDefault.Count > 0) { result.AddRange(CreateDefaultCSV(filename, qDefault)); }
             if (qMResponse.Count > 0) { result.AddRange(CreateMResponseCSV(filenameMResponse, qMResponse)); }
+            if (qHotspot.Count > 0) { result.AddRange(CreateHotspotCSV(filenameHotspot, qHotspot)); }
+            if (qXML.Count > 0) { result.AddRange(CreateXML(filenameXML, qXML)); }
 
             // done
             return result;
@@ -221,6 +238,91 @@ namespace QuestionTools.classes
 
 
 
+
+
+        public static List<string> CreateHotspotCSV(string filename, List<Question> questions)
+        {
+
+            //int questionsSkipped = 0;
+            List<string> result = new List<string>();
+            result.Add("Processing hotspot question types....");
+
+            // build CSV text
+            string csvText = "code,body,correct_choice,";
+            csvText += "choice_1,choice_2,choice_3,choice_4,choice_5,choice_6,choice_7,choice_8,choice_9,choice_10,";
+            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,feedback_correct,feedback_incorrect";
+
+            for (int i = 0; i < questions.Count; i++)
+            {
+
+                Question q = questions[i];
+
+                //List<string> errorsFound = QuestionLib.CheckQuestion(q);
+
+                //if (errorsFound.Count == 0)
+                //{
+
+                    string csv = GetQuestionHotspotAsCSV(q);
+
+                    if (csv.Length > 0)
+                    {
+                        csvText += Environment.NewLine + csv;
+                    }
+
+                //}
+                ////else
+                //{
+                //    questionsSkipped++;
+                //}
+
+            }
+
+            result.Add("\tCSV text created.");
+
+
+            // write csv file
+            JwCSV.WriteToFile(filename, csvText);
+            result.Add("\tCSV file created.");
+
+            // create image folder
+            List<Question> questionsWithImageData = QuestionLib.GetQuestionsWithImageData(questions);
+            string imageFolder = CFG.outputDir + Path.GetFileNameWithoutExtension(filename) + "-img";
+
+            if (questionsWithImageData.Count > 0)
+            {
+
+                System.IO.Directory.CreateDirectory(imageFolder);
+                result.Add("\timage dir created.");
+
+
+                // create images
+                int imageCount = 0;
+                for (int i = 0; i < questionsWithImageData.Count; i++)
+                {
+
+                    Question q = questionsWithImageData[i];
+                    if (q.image != String.Empty && q.imageData != String.Empty)
+                    {
+                        string imageFile = Path.Combine(imageFolder, q.image);
+                        File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
+                        imageCount++;
+                    }
+                }
+
+                result.Add("\t" + imageCount.ToString() + " images created.");
+
+            }
+
+            // return result
+            return result;
+
+        }
+
+
+
+
+
+
         public static string GetQuestionAsCSV(Question q)
         {
 
@@ -334,6 +436,84 @@ namespace QuestionTools.classes
 
         }
 
+
+
+
+
+        public static string GetQuestionHotspotAsCSV(Question q)
+        {
+
+            string csv = "";
+
+            // name - code
+            csv += "\"" + q.name + "\"" + ",";
+
+            // questionText - body
+            csv += "\"" + q.text + "\"" + ",";
+
+            csv += "\"" + q.data + "\"" + ",";
+
+            // answer options
+            for (int i = 0; i < 10; i++)
+            {
+                csv += ",";
+            }
+
+            csv += "Open,L1,";
+
+            // category - question_category_code
+            csv += "\"" + q.category + "\"" + ",";
+
+            string feedback_right = "";
+            string feedback_wrong = "";
+
+            csv += "\"" + q.image + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
+
+            return csv;
+
+        }
+
+
+
+
+
+        public static List<string> CreateXML(string filename, List<Question> questions)
+        {
+
+            int questionsSkipped = 0;
+            List<string> result = new List<string>();
+            result.Add("Processing " +questions.Count.ToString() + " unsupported question types to XML....");
+
+            // make new XML doc
+            XmlDocument xmlDoc = new XmlDocument();
+
+            XmlNode quizNode = xmlDoc.CreateElement("quiz");
+            xmlDoc.AppendChild(quizNode);
+
+            // add nodes
+            for (int i = 0; i < questions.Count; i++)
+            {
+                XmlNode qNode = questions[i].xmlNode;
+                if (qNode != null)
+                {
+
+                    XmlNode question = quizNode.OwnerDocument.ImportNode(qNode, true);
+                    quizNode.AppendChild(question);
+
+                }
+            }
+
+            
+
+            // write to file
+            JwXML.WriteToFile(xmlDoc, filename);
+
+            result.Add("\tOK. " + questionsSkipped.ToString() + " questions skipped (no XML data)");
+
+            // return result
+            return result;
+
+        }
 
 
 
