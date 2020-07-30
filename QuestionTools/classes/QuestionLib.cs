@@ -77,6 +77,34 @@ namespace QuestionTools.classes
             foreach (Question q in qList)
             {
 
+                if (q.images.Count > 0)
+                {
+
+                    for (int i = 0; i < q.images.Count; i++)
+                    {
+
+                        string im = q.images[i].name.Trim();
+
+                        if (im != String.Empty)
+                        {
+
+                            if (images.ContainsKey(im))
+                            {
+                                images[im]++;
+                            }
+                            else
+                            {
+                                images.Add(im, 1);
+                            }
+
+                        }
+
+                    }
+
+                }
+                
+
+                /*
                 string im = q.image.Trim();
 
                 if (q.imageData != String.Empty) { im += " [DATA]";  }
@@ -94,7 +122,7 @@ namespace QuestionTools.classes
                     }
 
                 }
-
+                */
             }
 
             return images;
@@ -309,7 +337,7 @@ namespace QuestionTools.classes
             for (int i = 0; i < questions.Count; i++)
             {
 
-                if (questions[i].image != String.Empty && questions[i].imageData != String.Empty)
+                if (questions[i].images.Count > 0)
                 {
                     questionsWithImageData.Add(questions[i]);
                 }

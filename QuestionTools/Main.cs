@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 
 //TODO check code still works with other input formats
-//TODO account for multiple images in question text
 
 
 
@@ -456,56 +455,9 @@ namespace QuestionTools
         private void debugToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            ClearText();
+            string myFile = @"C:\jon\data-to-process\bomardier\source\2-images.xml";
 
-            string source = @"<![CDATA[<div>Text gap pull-down:</div><br />The flight attendant ";
-            source += "{:MULTICHOICE:~=icon~%-100%Symbol with lines.} is located under ";
-            source += "{:MULTICHOICE:~%-100%cabin~%-100%At-A-Glance~%-100%video~%-100%audio~=maintenance} content category.]]>";
-
-            source = source.Replace("<![CDATA[", "");
-            source = source.Replace("]]>", "");
-
-            ShowOutput(source + Environment.NewLine);
-
-            string pattern = @"{:MULTICHOICE(.*?)}";
-            MatchCollection matches = Regex.Matches(source, pattern);
-            string qText = Regex.Replace(source, pattern, " ________ ");
-
-            ShowOutput(qText + Environment.NewLine);
-
-            // decode answer options
-            ShowOutput(matches.Count.ToString() + " blanks (______) found.");
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-
-                ShowOutput("BLANK " + (i + 1).ToString() + ": " + matches[i].Value);
-
-                // get correct options
-                string pattern2 = @"=([^~]+)[~}]"; 
-                MatchCollection matches2 = Regex.Matches(matches[i].Value, pattern2);
-
-                for (int j = 0; j < matches2.Count; j++)
-                {
-                    ShowOutput("CORRECT " + (j + 1).ToString() + ": " + matches2[j].Groups[1]);
-                }
-
-
-                // get incorrect options
-                string pattern3 = @"%-?\d*%([^~}]+)";
-                MatchCollection matches3 = Regex.Matches(matches[i].Value, pattern3);
-
-                for (int j = 0; j < matches3.Count; j++)
-                {
-                    ShowOutput("INCORRECT " + (j + 1).ToString() + ": " + matches3[j].Groups[1]);
-                }
-
-
-
-
-            }
-
-
+            ProcessFile(myFile);
 
         }
 

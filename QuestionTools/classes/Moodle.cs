@@ -49,14 +49,21 @@ namespace QuestionTools.classes
             q.text = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
             q.type = JwXML.GetNodeAttribute(myNode, "type");
 
-            // image?
-            XmlNode imageNode = JwXML.GetSingleNode(myNode, "questiontext/file");
 
-            q.image = JwXML.GetNodeAttribute(imageNode, "name");
+            // images?
 
-            if (imageNode != null)
+            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "questiontext/file");
+
+            foreach (XmlNode imageNode in imageNodes)
             {
-                q.imageData = imageNode.InnerText;
+                string imageName = JwXML.GetNodeAttribute(imageNode, "name");
+                string imageData = "";
+                if (imageNode != null) { imageData = imageNode.InnerText; }
+
+                if (imageName != String.Empty)
+                {
+                    q.AddImage(imageName, imageData);
+                }
             }
 
             XmlNodeList answers = JwXML.GetNodes(myNode, "answer");
@@ -104,14 +111,21 @@ namespace QuestionTools.classes
             data += "}";
             q.data = data;
 
-            // image?
-            XmlNode imageNode = JwXML.GetSingleNode(myNode, "file");
 
-            q.image = JwXML.GetNodeAttribute(imageNode, "name");
+            // images?
 
-            if (imageNode != null)
+            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "questiontext/file");
+
+            foreach (XmlNode imageNode in imageNodes)
             {
-                q.imageData = imageNode.InnerText;
+                string imageName = JwXML.GetNodeAttribute(imageNode, "name");
+                string imageData = "";
+                if (imageNode != null) { imageData = imageNode.InnerText; }
+
+                if (imageName != String.Empty)
+                {
+                    q.AddImage(imageName, imageData);
+                }
             }
 
             return q;
@@ -206,6 +220,23 @@ namespace QuestionTools.classes
             string pattern = @"{:MULTICHOICE(.*?)}";
             string qText = Regex.Replace(qData, pattern, " ________ ");
             q.text = qText.Trim();
+
+
+            // images?
+
+            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "questiontext/file");
+
+            foreach (XmlNode imageNode in imageNodes)
+            {
+                string imageName = JwXML.GetNodeAttribute(imageNode, "name");
+                string imageData = "";
+                if (imageNode != null) { imageData = imageNode.InnerText; }
+
+                if (imageName != String.Empty)
+                {
+                    q.AddImage(imageName, imageData);
+                }
+            }
 
 
             // get answer options

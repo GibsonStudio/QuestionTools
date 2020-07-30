@@ -102,7 +102,8 @@ namespace QuestionTools.classes
 
                 if (worksheet.Cells[row, imageIndex].Value != null)
                 { 
-                    q.image = CleanImage(JwString.Clean(worksheet.Cells[row, imageIndex].Value.ToString()));
+                    string imageName = CleanImage(JwString.Clean(worksheet.Cells[row, imageIndex].Value.ToString()));
+                    q.AddImage(imageName, "");
                 }
 
                 q.type = "multichoice";

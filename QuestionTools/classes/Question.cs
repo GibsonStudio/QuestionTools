@@ -21,8 +21,9 @@ namespace QuestionTools.classes
         public string text = "";
         public string type = "";
         public string data = "";
-        public string image = "";
-        public string imageData = "";
+        //public string image = "";
+        //public string imageData = "";
+        public List<Image> images = new List<Image>();
         public List<Option> options = new List<Option>();
         public XmlNode xmlNode;
 
@@ -37,6 +38,34 @@ namespace QuestionTools.classes
             options.Add(o);
 
         }
+
+
+        public void AddImage (string name, string data)
+        {
+
+            Image i = new Image();
+            i.name = name;
+            i.imageData = data;
+            images.Add(i);
+
+        }
+
+
+        public string GetImageString ()
+        {
+
+            string imageString = "";
+
+            for (int i = 0; i < images.Count; i++)
+            {
+                if (imageString != String.Empty) { imageString += ";"; }
+                imageString += images[i].name;
+            }
+
+            return imageString;
+
+        }
+
 
 
         public string GetDebug()
@@ -58,8 +87,14 @@ namespace QuestionTools.classes
                 txt += Environment.NewLine;
             }
 
-            if (image != String.Empty) { txt += "Image: " + image + Environment.NewLine; }
-            if (imageData != String.Empty) { txt += "ImageData: " + "YES" + Environment.NewLine; }
+            //if (image != String.Empty) { txt += "Image: " + image + Environment.NewLine; }
+            //if (imageData != String.Empty) { txt += "ImageData: " + "YES" + Environment.NewLine; }
+            for (int i = 0; i < images.Count; i++)
+            {
+                if (images[i].name != String.Empty) { txt += "Image: " + images[i].name + Environment.NewLine; }
+                if (images[i].imageData != String.Empty) { txt += "ImageData: " + "YES" + Environment.NewLine; }
+            }
+
             if (data != String.Empty) { txt += "Data: " + data + Environment.NewLine; }
             if (xmlNode != null) { txt += "XML:" + Environment.NewLine + xmlNode.OuterXml.ToString() + Environment.NewLine; }
 

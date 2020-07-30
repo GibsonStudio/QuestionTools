@@ -134,12 +134,22 @@ namespace QuestionTools.classes
                 {
 
                     Question q = questionsWithImageData[i];
-                    if (q.image != String.Empty && q.imageData != String.Empty)
+
+                    for (int j = 0; j < q.images.Count; j++)
                     {
-                        string imageFile = Path.Combine(imageFolder, q.image);
-                        File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
-                        imageCount++;
+                        if (q.images[j].name != String.Empty && q.images[j].imageData != String.Empty)
+                        {
+                            string imageFile = Path.Combine(imageFolder, q.images[j].name);
+                            File.WriteAllBytes(imageFile, Convert.FromBase64String(q.images[j].imageData));
+                            imageCount++;
+                        }
                     }
+                    //if (q.image != String.Empty && q.imageData != String.Empty)
+                    //{
+                    //    string imageFile = Path.Combine(imageFolder, q.image);
+                    //    File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
+                    //    imageCount++;
+                    //}
                 }
 
                 result.Add("\t" + imageCount.ToString() + " images created.");
@@ -215,11 +225,13 @@ namespace QuestionTools.classes
                 {
 
                     Question q = questionsWithImageData[i];
-                    if (q.image != String.Empty && q.imageData != String.Empty)
-                    {
-                        string imageFile = Path.Combine(imageFolder, q.image);
-                        File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
-                        imageCount++;
+                    for (int j = 0; j < q.images.Count; j++) { 
+                        if (q.images[j].name != String.Empty && q.images[j].imageData != String.Empty)
+                        {
+                            string imageFile = Path.Combine(imageFolder, q.images[j].name);
+                            File.WriteAllBytes(imageFile, Convert.FromBase64String(q.images[j].imageData));
+                            imageCount++;
+                        }
                     }
                 }
 
@@ -299,13 +311,14 @@ namespace QuestionTools.classes
                 int imageCount = 0;
                 for (int i = 0; i < questionsWithImageData.Count; i++)
                 {
-
                     Question q = questionsWithImageData[i];
-                    if (q.image != String.Empty && q.imageData != String.Empty)
-                    {
-                        string imageFile = Path.Combine(imageFolder, q.image);
-                        File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
-                        imageCount++;
+                    for (int j = 0; j < q.images.Count; j++) {
+                        if (q.images[j].name != String.Empty && q.images[j].imageData != String.Empty)
+                        {
+                            string imageFile = Path.Combine(imageFolder, q.images[j].name);
+                            File.WriteAllBytes(imageFile, Convert.FromBase64String(q.images[j].imageData));
+                            imageCount++;
+                        }
                     }
                 }
 
@@ -381,7 +394,14 @@ namespace QuestionTools.classes
                 }
             }
 
-            csv += "\"" + q.image + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
+            string images = "";
+            for (int j = 0; j < q.images.Count; j++)
+            {
+                if (images != String.Empty) { images += ";"; }
+                images += q.images[j].name;
+            }
+
+            csv += "\"" + images + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
 
             return csv;
 
@@ -467,7 +487,14 @@ namespace QuestionTools.classes
             string feedback_right = "";
             string feedback_wrong = "";
 
-            csv += "\"" + q.image + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
+            string images = "";
+            for (int j = 0; j < q.images.Count; j++)
+            {
+                if (images != String.Empty) { images += ";"; }
+                images += q.images[j].name;
+            }
+
+            csv += "\"" + images + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
 
             return csv;
 
