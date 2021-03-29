@@ -25,6 +25,7 @@ namespace QuestionTools
             rtb_moodle.LoadFile("data\\moodle_xml_help.rtf");
             rtb_lplus.LoadFile("data\\l-plus_help.rtf");
             rtb_pelesys.LoadFile("data\\pelesys_help.rtf");
+            rtbChangeLog.LoadFile("data\\change_log.rtf");
 
         }
 

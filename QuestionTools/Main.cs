@@ -28,7 +28,7 @@ namespace QuestionTools
         public string g_filename = "";
 
 
-
+  
         public Main()
         {
 
@@ -71,6 +71,8 @@ namespace QuestionTools
             f.Filter = "All Files|*.*|XML Files|*.xml|L-plus Excel|*.xlsx";
             f.InitialDirectory = CFG.sourceDir;
             f.Title = "Select file to process:";
+            f.RestoreDirectory = false;
+            f.ShowHelp = true;
 
             if (f.ShowDialog() == DialogResult.OK)
             {
@@ -125,6 +127,11 @@ namespace QuestionTools
 
             List<Question> questions = QuestionLib.GetQuestions(sourceFile);
             ShowOutput(questions.Count.ToString() + " questions found.");
+
+            // look for questions with new feedback, cloze and multichoiceset
+            List<Question> qNewFeedback = QuestionLib.GetQuestionsWithNewFeedback(questions);
+            ShowOutput("Questions with new feedback: " + qNewFeedback.Count.ToString());
+
 
             // show questions in tab
             foreach (Question q in questions)
@@ -248,7 +255,18 @@ namespace QuestionTools
             List<Question> withImages = QuestionLib.GetQuestionListWithImages(questions);
             ShowOutput(withImages.Count.ToString() + " found.");
 
+
+
+            // look for questions with new feedback, cloze and multichoiceset
+            List<Question> qNewFeedback = QuestionLib.GetQuestionsWithNewFeedback(questions);
+            ShowOutput("Questions with new feedback: " + qNewFeedback.Count.ToString());
+
+
+
+
+            // finished
             ShowMessage("Done. " + questions.Count.ToString() + " questions found.");
+
 
         }
 
@@ -463,6 +481,13 @@ namespace QuestionTools
 
 
 
+
+
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
 
 

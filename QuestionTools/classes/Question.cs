@@ -21,6 +21,13 @@ namespace QuestionTools.classes
         public string text = "";
         public string type = "";
         public string data = "";
+
+        // feedbacks
+        public string generalfeedback = "";
+        public string correctfeedback = "";
+        public string incorrectfeedback = "";
+        public string partiallycorrectfeedback = "";
+
         //public string image = "";
         //public string imageData = "";
         public List<Image> images = new List<Image>();
@@ -87,6 +94,12 @@ namespace QuestionTools.classes
                 txt += Environment.NewLine;
             }
 
+            // feedback
+            if (correctfeedback != String.Empty) { txt += "Correct Feedback: " + correctfeedback + Environment.NewLine; }
+            if (incorrectfeedback != String.Empty) { txt += "Incorrect Feedback: " + incorrectfeedback + Environment.NewLine; }
+
+            txt += "Answer Feedback: " + GetAnswerFeedback() + Environment.NewLine;
+
             //if (image != String.Empty) { txt += "Image: " + image + Environment.NewLine; }
             //if (imageData != String.Empty) { txt += "ImageData: " + "YES" + Environment.NewLine; }
             for (int i = 0; i < images.Count; i++)
@@ -101,6 +114,25 @@ namespace QuestionTools.classes
             return txt;
         }
 
+
+
+        public string GetAnswerFeedback ()
+        {
+
+            string af = "";
+            int index = 1;
+
+            foreach (Option o in options)
+            {
+                af += "[" + index.ToString() + ":";
+                af += o.feedback;
+                af += "]";
+                index++;
+            }
+
+            return af;
+
+        }
 
 
         public Boolean HasMultipleCorrect ()
@@ -118,6 +150,44 @@ namespace QuestionTools.classes
             return false;
 
         }
+
+
+
+        public Boolean HasFeedback ()
+        {
+
+            if (generalfeedback != String.Empty || correctfeedback != String.Empty || incorrectfeedback != String.Empty || partiallycorrectfeedback != String.Empty)
+            {
+                return true;
+            }
+
+            foreach (Option o in options)
+            {
+                if (o.feedback != String.Empty)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+
+
+
+        public Boolean HasNewFeedback()
+        {
+
+            if (generalfeedback != String.Empty || correctfeedback != String.Empty || incorrectfeedback != String.Empty || partiallycorrectfeedback != String.Empty)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
 
 
 

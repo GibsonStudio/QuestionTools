@@ -48,7 +48,10 @@ namespace QuestionTools.classes
             q.name = JwString.CleanQuestionName(JwXML.GetNodeValue(myNode, "name/text"));
             q.text = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
             q.type = JwXML.GetNodeAttribute(myNode, "type");
-
+            q.generalfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "generalfeedback/text"));
+            q.correctfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "correctfeedback/text"));
+            q.incorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "incorrectfeedback/text"));
+            q.partiallycorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "partiallycorrectfeedback/text"));
 
             // images?
 
@@ -96,6 +99,12 @@ namespace QuestionTools.classes
             q.text = JwXML.GetNodeValue(myNode, "questiontext/text");
             q.type = JwXML.GetNodeAttribute(myNode, "type");
 
+            // feedback
+            q.generalfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "generalfeedback/text"));
+            q.correctfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "correctfeedback/text"));
+            q.incorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "incorrectfeedback/text"));
+            q.partiallycorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "partiallycorrectfeedback/text"));
+
             // get data
             string data = "{";
 
@@ -114,7 +123,7 @@ namespace QuestionTools.classes
 
             // images?
 
-            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "questiontext/file");
+            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "file"); // "questiontext/file");
 
             foreach (XmlNode imageNode in imageNodes)
             {
@@ -204,13 +213,132 @@ namespace QuestionTools.classes
         }
 
 
-        public static Question GetQuestionCloze(XmlNode myNode)
+
+
+
+
+        public static Question GetQuestionCloze (XmlNode myNode)
+        {
+
+            string qData = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
+
+            if (qData.Contains("{:MULTICHOICE"))
+            {
+                return GetQuestionClozeType2(myNode);
+            }
+            else
+            {
+                return GetQuestionClozeType1(myNode);
+            }
+            
+
+        }
+
+
+
+
+
+
+        public static Question GetQuestionClozeType1 (XmlNode myNode)
         {
 
             Question q = new Question();
 
             q.name = JwString.CleanQuestionName(JwXML.GetNodeValue(myNode, "name/text"));            
             q.type = JwXML.GetNodeAttribute(myNode, "type");
+
+            // feedback
+            q.generalfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "generalfeedback/text"));
+            q.correctfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "correctfeedback/text"));
+            q.incorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "incorrectfeedback/text"));
+            q.partiallycorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "partiallycorrectfeedback/text"));
+
+            string qData = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
+            qData = qData.Replace("<![CDATA[", "");
+            qData = qData.Replace("]]>", "");
+
+            // get question text
+            string pattern = @"{\d*:MC(.*?)}";
+            string qText = Regex.Replace(qData, pattern, " ________ ");
+            q.text = qText.Trim();
+
+
+            // images?
+
+            XmlNodeList imageNodes = JwXML.GetNodes(myNode, "questiontext/file");
+
+            foreach (XmlNode imageNode in imageNodes)
+            {
+                string imageName = JwXML.GetNodeAttribute(imageNode, "name");
+                string imageData = "";
+                if (imageNode != null) { imageData = imageNode.InnerText; }
+
+                if (imageName != String.Empty)
+                {
+                    q.AddImage(imageName, imageData);
+                }
+            }
+
+
+            // get answer options
+            MatchCollection blanks = Regex.Matches(qData, pattern);
+
+            if (blanks.Count > 1) {
+                q.type = "UNSUPPORTED: " + q.type;
+                q.xmlNode = myNode;
+            }
+
+            for (int i = 0; i < blanks.Count; i++)
+            {
+
+                // get correct options
+                string pattern2 = @"=([^~]+)[~}]";
+                MatchCollection matches2 = Regex.Matches(blanks[i].Value, pattern2);
+
+                for (int j = 0; j < matches2.Count; j++)
+                {
+                    string optionText = matches2[j].Groups[1].ToString().Trim();
+                    string optionFeedback = "";
+                    float optionGrade = 1.0f;
+                    q.AddOption(optionText, optionFeedback, optionGrade);
+                }
+
+
+                // get incorrect options
+                string pattern3 = @"%-?\d*%([^~}]+)";
+                MatchCollection matches3 = Regex.Matches(blanks[i].Value, pattern3);
+
+                for (int j = 0; j < matches3.Count; j++)
+                {
+                    string optionText = matches3[j].Groups[1].ToString().Trim();
+                    string optionFeedback = "";
+                    float optionGrade = 0.0f;
+                    q.AddOption(optionText, optionFeedback, optionGrade);
+                }
+
+            }
+
+            return q;
+
+        }
+
+
+
+
+
+        public static Question GetQuestionClozeType2 (XmlNode myNode)
+        {
+
+            Question q = new Question();
+
+            q.name = JwString.CleanQuestionName(JwXML.GetNodeValue(myNode, "name/text"));
+            q.type = JwXML.GetNodeAttribute(myNode, "type");
+
+            // feedback
+            q.generalfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "generalfeedback/text"));
+            q.correctfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "correctfeedback/text"));
+            q.incorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "incorrectfeedback/text"));
+            q.partiallycorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "partiallycorrectfeedback/text"));
 
             string qData = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
             qData = qData.Replace("<![CDATA[", "");
@@ -242,7 +370,8 @@ namespace QuestionTools.classes
             // get answer options
             MatchCollection blanks = Regex.Matches(qData, pattern);
 
-            if (blanks.Count > 1) {
+            if (blanks.Count > 1)
+            {
                 q.type = "UNSUPPORTED: " + q.type;
                 q.xmlNode = myNode;
             }
@@ -338,6 +467,12 @@ namespace QuestionTools.classes
             q.text = JwString.Clean(JwXML.GetNodeValue(myNode, "questiontext/text"));
             q.type = JwXML.GetNodeAttribute(myNode, "type");
             q.xmlNode = myNode;
+
+            // feedback
+            q.generalfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "generalfeedback/text"));
+            q.correctfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "correctfeedback/text"));
+            q.incorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "incorrectfeedback/text"));
+            q.partiallycorrectfeedback = JwString.Clean(JwXML.GetNodeValue(myNode, "partiallycorrectfeedback/text"));
 
             XmlNodeList answers = JwXML.GetNodes(myNode, "answer");
 

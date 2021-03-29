@@ -15,3 +15,4 @@ C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Release\data\l-plu
 C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Release\data\pelesys_help.rtf
 C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Release\data\help.rtf
 C:\jon\visual_studio_projects\QuestionTools\QuestionTools\obj\Release\QuestionTools.csproj.CoreCompileInputs.cache
+C:\jon\visual_studio_projects\QuestionTools\QuestionTools\bin\Release\data\change_log.rtf

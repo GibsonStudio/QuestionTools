@@ -53,6 +53,7 @@
     <Compile Include="classes\LPlus.cs" />
     <Compile Include="classes\Moodle.cs" />
     <Compile Include="classes\Pelesys.cs" />
+    <Compile Include="classes\PelesysXML.cs" />
     <Compile Include="classes\Qantas.cs" />
     <Compile Include="classes\Question.cs" />
     <Compile Include="classes\QuestionLib.cs" />
@@ -85,18 +86,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="data\help.rtf">
+    <Content Include="data\change_log.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\l-plus_help.rtf">
+    </Content>
+    <Content Include="data\help.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\moodle_xml_help.rtf">
+    </Content>
+    <Content Include="data\l-plus_help.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\pelesys_help.rtf">
+    </Content>
+    <Content Include="data\moodle_xml_help.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="data\pelesys_help.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

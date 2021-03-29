@@ -83,7 +83,15 @@ namespace QuestionTools.classes
             // build CSV text
             string csvText = "code,body,correct_choice,";
             csvText += "choice_1,choice_2,choice_3,choice_4,choice_5,choice_6,choice_7,choice_8,choice_9,choice_10,";
-            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,feedback_correct,feedback_incorrect";
+            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,correct_feedback,incorrect_feedback";
+            //csvText += ",generalfeedback,partiallycorrectfeedback";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                csvText += ",choice_" + i.ToString() + "_feedback";
+            }
+
+
 
             for (int i = 0; i < questions.Count; i++)
             {
@@ -144,12 +152,7 @@ namespace QuestionTools.classes
                             imageCount++;
                         }
                     }
-                    //if (q.image != String.Empty && q.imageData != String.Empty)
-                    //{
-                    //    string imageFile = Path.Combine(imageFolder, q.image);
-                    //    File.WriteAllBytes(imageFile, Convert.FromBase64String(q.imageData));
-                    //    imageCount++;
-                    //}
+
                 }
 
                 result.Add("\t" + imageCount.ToString() + " images created.");
@@ -176,7 +179,14 @@ namespace QuestionTools.classes
             string csvText = "code,body,";
             csvText += "choice_1,answer_1,choice_2,answer_2,choice_3,answer_3,choice_4,answer_4,choice_5,answer_5,";
             csvText += "choice_6,answer_6,choice_7,answer_7,choice_8,answer_8,choice_9,answer_9,choice_10,answer_10,";
-            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam";
+            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,correct_feedback,incorrect_feedback";
+            //csvText += ",generalfeedback,partiallycorrectfeedback";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                csvText += ",choice_" + i.ToString() + "_feedback";
+            }
+
 
             for (int i = 0; i < questions.Count; i++)
             {
@@ -262,17 +272,20 @@ namespace QuestionTools.classes
             // build CSV text
             string csvText = "code,body,correct_choice,";
             csvText += "choice_1,choice_2,choice_3,choice_4,choice_5,choice_6,choice_7,choice_8,choice_9,choice_10,";
-            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,feedback_correct,feedback_incorrect";
+            csvText += "status,difficulty,question_category_code,keyword,can_fail_exam,correct_feedback,incorrect_feedback";
+            //csvText += ",generalfeedback,partiallycorrectfeedback,";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                csvText += ",choice_" + i.ToString() + "_feedback";
+            }
+
+
 
             for (int i = 0; i < questions.Count; i++)
             {
 
                 Question q = questions[i];
-
-                //List<string> errorsFound = QuestionLib.CheckQuestion(q);
-
-                //if (errorsFound.Count == 0)
-                //{
 
                     string csv = GetQuestionHotspotAsCSV(q);
 
@@ -280,12 +293,6 @@ namespace QuestionTools.classes
                     {
                         csvText += Environment.NewLine + csv;
                     }
-
-                //}
-                ////else
-                //{
-                //    questionsSkipped++;
-                //}
 
             }
 
@@ -336,7 +343,7 @@ namespace QuestionTools.classes
 
 
 
-        public static string GetQuestionAsCSV(Question q)
+        public static string GetQuestionAsCSV (Question q)
         {
 
             string csv = "";
@@ -379,20 +386,6 @@ namespace QuestionTools.classes
             // category - question_category_code
             csv += "\"" + q.category + "\"" + ",";
 
-            string feedback_right = "";
-            string feedback_wrong = "";
-
-            for (int i = 0; i < q.options.Count; i++)
-            {
-                if (q.options[i].grade > 0)
-                {
-                    feedback_right = q.options[i].feedback;
-                }
-                else
-                {
-                    feedback_wrong = q.options[i].feedback;
-                }
-            }
 
             string images = "";
             for (int j = 0; j < q.images.Count; j++)
@@ -401,7 +394,25 @@ namespace QuestionTools.classes
                 images += q.images[j].name;
             }
 
-            csv += "\"" + images + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
+            // process feedback
+            String[] fb = QuestionLib.ParseFeedbacks(q);
+
+            csv += "\"" + images + "\"" + ",n," + "\"" + fb[0] + "\"" + "," + "\"" + fb[1] + "\"";
+
+            //csv += "\"" + images + "\"" + ",n," + "\"" + q.correctfeedback + "\"" + "," + "\"" + q.incorrectfeedback + "\"";
+            //csv += ",\"" + q.generalfeedback + "\"";
+            //csv += ",\"" + q.partiallycorrectfeedback + "\"";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                string optionFeedback = "";
+                if (i <= q.options.Count)
+                {
+                    optionFeedback = q.options[i - 1].feedback;
+                }
+                csv += ",\"" + optionFeedback + "\"";
+            }
+
 
             return csv;
 
@@ -452,6 +463,23 @@ namespace QuestionTools.classes
 
             csv += "\"\",\"\"";
 
+            // feedback
+            String[] fb = QuestionLib.ParseFeedbacks(q);
+            csv += ",\"" + fb[0] + "\"";
+            csv += ",\"" + fb[1] + "\"";
+            //csv += ",\"" + q.generalfeedback + "\"";
+            //csv += ",\"" + q.partiallycorrectfeedback + "\"";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                string optionFeedback = "";
+                if (i <= q.options.Count)
+                {
+                    optionFeedback = q.options[i - 1].feedback;
+                }
+                csv += ",\"" + optionFeedback + "\"";
+            }
+
             return csv;
 
         }
@@ -484,8 +512,10 @@ namespace QuestionTools.classes
             // category - question_category_code
             csv += "\"" + q.category + "\"" + ",";
 
-            string feedback_right = "";
-            string feedback_wrong = "";
+            //string feedback_right = "";
+            //string feedback_wrong = "";
+
+            String[] fb = QuestionLib.ParseFeedbacks(q);
 
             string images = "";
             for (int j = 0; j < q.images.Count; j++)
@@ -494,7 +524,7 @@ namespace QuestionTools.classes
                 images += q.images[j].name;
             }
 
-            csv += "\"" + images + "\"" + ",n," + "\"" + feedback_right + "\"" + "," + "\"" + feedback_wrong + "\"";
+            csv += "\"" + images + "\"" + ",n," + "\"" + fb[0] + "\"" + "," + "\"" + fb[1] + "\"";
 
             return csv;
 

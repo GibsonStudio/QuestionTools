@@ -25,6 +25,7 @@ namespace QuestionTools.classes
             if (fileFormat == "qantasXML") { qList = Qantas.ReadFile(sourceFile); }
             if (fileFormat == "moodleXML") { qList = Moodle.ReadFile(sourceFile); }
             if (fileFormat == "lplusExcel") { qList = LPlus.ReadFile(sourceFile); }
+            if (fileFormat == "pelesysXML") { qList = PelesysXML.ReadFile(sourceFile); }
 
             return qList;
 
@@ -188,6 +189,9 @@ namespace QuestionTools.classes
             XmlNodeList questions = doc.SelectNodes("/quiz/question");
             if (questions.Count > 0) { fileFormat = "moodleXML"; }
 
+            XmlNodeList questions2 = doc.SelectNodes("/questions/question");
+            if (questions2.Count > 0) { fileFormat = "pelesysXML"; }
+
             return fileFormat;
 
         }
@@ -348,6 +352,71 @@ namespace QuestionTools.classes
 
         }
 
+
+
+
+        public static String[] ParseFeedbacks(Question q)
+        {
+
+            String[] fb = new String[2];
+
+            String cFB = q.correctfeedback;
+            String iFB = q.incorrectfeedback;
+            String gFB = q.generalfeedback;
+            String pFB = q.partiallycorrectfeedback;
+
+            fb[0] = "";
+            fb[1] = "";
+
+            if (cFB != String.Empty && iFB != String.Empty)
+            {
+                fb[0] = cFB;
+                fb[1] = iFB;
+            }
+            else if (cFB != String.Empty && iFB == String.Empty)
+            {
+                fb[0] = cFB;
+                fb[1] = cFB;
+            }
+            else if (cFB == String.Empty && iFB != String.Empty)
+            {
+                fb[0] = iFB;
+                fb[1] = iFB;
+            }
+            else if (cFB == String.Empty && iFB == String.Empty && gFB != String.Empty)
+            {
+                fb[0] = gFB;
+                fb[1] = gFB;
+            }
+            else if (cFB == String.Empty && iFB == String.Empty && pFB != String.Empty)
+            {
+                fb[0] = pFB;
+                fb[1] = pFB;
+            }
+
+            return fb;
+
+        }
+
+
+        public static List<Question> GetQuestionsWithNewFeedback (List<Question> questions)
+        {
+
+            List<Question> result = new List<Question>();
+
+            foreach (Question q in questions)
+            {
+                
+                if (q.HasNewFeedback())
+                {
+                    result.Add(q);
+                }                
+
+            }
+
+            return result;
+
+        }
 
 
 

@@ -29,22 +29,25 @@
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.rtb_help = new System.Windows.Forms.RichTextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.rtb_qantas = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.rtb_moodle = new System.Windows.Forms.RichTextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.rtb_lplus = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.rtb_pelesys = new System.Windows.Forms.RichTextBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.rtb_help = new System.Windows.Forms.RichTextBox();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.rtbChangeLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -57,11 +60,34 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(998, 490);
             this.tabControl1.TabIndex = 0;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.rtb_help);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(990, 461);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Help";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // rtb_help
+            // 
+            this.rtb_help.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtb_help.Location = new System.Drawing.Point(6, 6);
+            this.rtb_help.Name = "rtb_help";
+            this.rtb_help.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtb_help.Size = new System.Drawing.Size(978, 449);
+            this.rtb_help.TabIndex = 2;
+            this.rtb_help.Text = "";
             // 
             // tabPage1
             // 
@@ -97,16 +123,6 @@
             this.tabPage2.Text = "In: moodle";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.rtb_lplus);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(990, 461);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "In: L-Plus";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
             // rtb_moodle
             // 
             this.rtb_moodle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -119,15 +135,15 @@
             this.rtb_moodle.TabIndex = 1;
             this.rtb_moodle.Text = "";
             // 
-            // tabPage4
+            // tabPage3
             // 
-            this.tabPage4.Controls.Add(this.rtb_pelesys);
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(990, 461);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Out: Pelesys";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage3.Controls.Add(this.rtb_lplus);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(990, 461);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "In: L-Plus";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // rtb_lplus
             // 
@@ -141,6 +157,16 @@
             this.rtb_lplus.TabIndex = 1;
             this.rtb_lplus.Text = "";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.rtb_pelesys);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(990, 461);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Out: Pelesys";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // rtb_pelesys
             // 
             this.rtb_pelesys.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -153,27 +179,27 @@
             this.rtb_pelesys.TabIndex = 1;
             this.rtb_pelesys.Text = "";
             // 
-            // tabPage5
+            // tabPage6
             // 
-            this.tabPage5.Controls.Add(this.rtb_help);
-            this.tabPage5.Location = new System.Drawing.Point(4, 25);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(990, 461);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Help";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.tabPage6.Controls.Add(this.rtbChangeLog);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(990, 461);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Change Log";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // rtb_help
+            // rtbChangeLog
             // 
-            this.rtb_help.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.rtbChangeLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtb_help.Location = new System.Drawing.Point(6, 6);
-            this.rtb_help.Name = "rtb_help";
-            this.rtb_help.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtb_help.Size = new System.Drawing.Size(978, 449);
-            this.rtb_help.TabIndex = 2;
-            this.rtb_help.Text = "";
+            this.rtbChangeLog.Location = new System.Drawing.Point(6, 6);
+            this.rtbChangeLog.Name = "rtbChangeLog";
+            this.rtbChangeLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtbChangeLog.Size = new System.Drawing.Size(978, 449);
+            this.rtbChangeLog.TabIndex = 2;
+            this.rtbChangeLog.Text = "";
             // 
             // Help
             // 
@@ -186,11 +212,12 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HelpClosing);
             this.Load += new System.EventHandler(this.Help_Load);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
-            this.tabPage5.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -208,5 +235,7 @@
         private System.Windows.Forms.RichTextBox rtb_pelesys;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.RichTextBox rtb_help;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.RichTextBox rtbChangeLog;
     }
 }
